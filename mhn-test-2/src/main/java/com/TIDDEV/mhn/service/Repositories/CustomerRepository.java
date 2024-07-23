@@ -1,6 +1,7 @@
 package com.TIDDEV.mhn.service.Repositories;
 
 import com.TIDDEV.mhn.service.model.Customer;
+import com.TIDDEV.mhn.service.modelDto.CustomCustomerList;
 import com.TIDDEV.mhn.service.modelDto.CustomersListByCheckListCount;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -29,4 +30,10 @@ public interface CustomerRepository extends JpaRepository<Customer , Long> {
     List<Customer> customersStartingWith(@Param("prefix") String prefix);
     @Query("select cus from Customer cus where cus.accNo like %:suffix")
     List<Customer> customersEndingWith(@Param("suffix") String prefix);
+    @Query("select new com.TIDDEV.mhn.service.modelDto.CustomCustomerList(" +
+            "cus.ID , cus.customerName , AVG (cusC.amount) )" +
+            "from Customer cus join CustomerCheck  cusC on cus.ID = cusC.customer.ID" +
+            " group by cus.ID , cus.customerName "
+    )
+    List<CustomCustomerList> customCustomerList() ;
 }

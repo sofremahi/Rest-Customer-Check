@@ -5,6 +5,10 @@ import com.TIDDEV.mhn.service.CustomResponse;
 import com.TIDDEV.mhn.service.model.Customer;
 import com.TIDDEV.mhn.service.modelDto.CustomersListByCheckListCount;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,6 +21,7 @@ public class Controller {
     public void setService(AppService service) {
         this.service = service;
     }
+
 
     @GetMapping("/customers/by/checklist/size/today/{size}")
     public CustomResponse<List<CustomersListByCheckListCount>> customersByCheckListSizeToday(@PathVariable("size") Integer size){
@@ -47,5 +52,11 @@ public class Controller {
     @GetMapping("/customers/ending/with/{suffix}")
     public CustomResponse<List<Customer>> customersEndingWith(@PathVariable("suffix") String suffix){
         return service.customersEndingWith(suffix);
+    }
+    @GetMapping("/customers/avgAmount/per/customer/chart")
+    public ResponseEntity<byte []> getCustomChart() throws Exception{
+       byte[] image = service.chart();
+        HttpHeaders headers = new HttpHeaders(); headers.setContentType(MediaType.IMAGE_PNG);
+        return new ResponseEntity<>(image , headers, HttpStatus.OK);
     }
 }
