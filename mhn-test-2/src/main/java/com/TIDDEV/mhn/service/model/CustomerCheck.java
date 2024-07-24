@@ -2,6 +2,7 @@ package com.TIDDEV.mhn.service.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,6 +10,7 @@ import java.time.LocalDate;
 
 @Setter
 @Getter
+@EqualsAndHashCode
 @Table(name = "CUSTOMER_CHECK")
 @Entity
 public class CustomerCheck {
@@ -23,4 +25,6 @@ public class CustomerCheck {
     @JoinColumn(name = "CUSTOMER_ID")
     @JsonBackReference
     private Customer customer;
+
+
 }

@@ -8,6 +8,7 @@ import com.TIDDEV.mhn.service.modelDto.CustomCustomerList;
 import com.TIDDEV.mhn.service.modelDto.CustomersListByCheckListCount;
 import com.fasterxml.jackson.core.PrettyPrinter;
 import jakarta.persistence.criteria.CriteriaBuilder;
+import org.hibernate.annotations.DialectOverride;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
@@ -87,13 +88,26 @@ public class AppService {
                 "avg check amount",
                 dataSet,
                 PlotOrientation.VERTICAL,
-                true,
-                true,
+                false,
+                false,
                 false
         );
         BufferedImage chartImage = chart.createBufferedImage(800, 600);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ChartUtils.writeBufferedImageAsPNG(baos, chartImage);
         return baos.toByteArray();
+    }
+
+    public CustomResponse<Customer> addCustomer(Customer customer){
+        return new CustomResponse<>("",HttpStatus.OK ,customerRepository.save(customer));
+    }
+    public CustomResponse<CustomerCheck> addCheck(CustomerCheck check , Long customerId){
+        if(customerRepository.findById(customerId).isEmpty()){
+           return new CustomResponse<>(" no customer found by the given Id",
+                    HttpStatus.NOT_FOUND , null);
+        }
+        check.setCheckDate(LocalDate.now());
+        check.setCustomer(customerRepository.findById(customerId).get());
+        return new CustomResponse<>("",HttpStatus.OK , checkRepository.save(check));
     }
 }

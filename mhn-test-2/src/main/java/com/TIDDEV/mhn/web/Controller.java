@@ -3,6 +3,7 @@ package com.TIDDEV.mhn.web;
 import com.TIDDEV.mhn.service.AppService;
 import com.TIDDEV.mhn.service.CustomResponse;
 import com.TIDDEV.mhn.service.model.Customer;
+import com.TIDDEV.mhn.service.model.CustomerCheck;
 import com.TIDDEV.mhn.service.modelDto.CustomersListByCheckListCount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -58,5 +59,14 @@ public class Controller {
        byte[] image = service.chart();
         HttpHeaders headers = new HttpHeaders(); headers.setContentType(MediaType.IMAGE_PNG);
         return new ResponseEntity<>(image , headers, HttpStatus.OK);
+    }
+    @PostMapping("/add/customer")
+    public CustomResponse<Customer> addCustomer(@RequestBody Customer customer ){
+    return service.addCustomer(customer);
+    }
+    @PostMapping("add/check/{customerId}")
+    public CustomResponse<CustomerCheck> addCheck(@RequestBody CustomerCheck check,
+                                                  @PathVariable("customerId") Long customerId){
+        return service.addCheck(check , customerId);
     }
 }
